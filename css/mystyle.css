@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans|Roboto');
+
+body    {
+    padding-top: 50px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1  {
+    font-family: 'Roboto', sans-serif;
+    font-size: 45px;
+}
+.intro, .comment  {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif;
+}
+.input, .ammount, .expenses, .hoursPerWeek  {
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.incomeTax  {
+    display: block;
+    margin: 15px auto;
+}
+
+.expense, h1    {
+    text-align: center;
+}
+
+.budgetCalc {
+    display: none;
+}
+
+
+input#taxfree, .period   {
+    padding-bottom: 20px;
+}
+
+table   {
+    width: 640px; 
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+td, th  {  
+    border: 1px solid black; 
+    height: 30px;
+}  
+
+th {  
+    background: #7792ff; 
+    font-weight: bold;
+}
+
+td {  
+    background: #FAFAFA;
+    text-align: center;
+}
+
+
+.totalBudget  { 
+    text-align: center;
+    padding-top: 50px;
+}
+
+input[type="submit"] {
+
+    display: block;
+    text-decoration: none;
+    margin: 0 auto;
+    margin-top: 15px;
+    margin-bottom: 10px;
+
+    border: solid 1px transparent;
+    border-radius: 4px;
+
+    padding: 0.5em 1em;
+
+    color: #ffffff;
+    background-color: #4358b2;
+    cursor:pointer;
+}
+
+input[type="submit"]:hover {
+    color: #4358b2;
+    border-color: currentColor;
+    background-color: white;
+}
+
+.output {
+    text-align: center;
+}
+
+
+.total  {
+    display: inline-block;
+    border: solid 1px;
+    border-color: #4358b2;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 20%;
+}
+
+.calculator {
+    display: block;
+}
+
+.input, .calculator  {
+    border: solid 1px;
+    border-color: #4358b2;
+    border-radius: 12px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 50%;
+}
+
+
+#reset {
+    display: inline-block;
+    text-decoration: none;
+    margin: 0 auto;
+
+    border: solid 1px transparent;
+    border-radius: 4px;
+
+    padding: 15px 40px;
+    margin-left: 15px;
+    color: black;
+    background-color: lightgray;
+    cursor:pointer;
+}
+
+#reset:hover    {
+    color: gray;
+    border-color: currentColor;
+    background-color: white;
+}
+
+.info {
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif; 
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+
+.refresh {
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif; 
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+}
+
+.about  {
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif; 
+}
+
+
+
+
+

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Personal expense calculator</title>
+	<link rel="stylesheet" type="text/css" href="css/mystyle.css">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="js/expenseCalc.js"></script>	
+	<h1>Welcome to personal income and expense calculator!</h1>
+	
+	<p class="intro">Enter your income and select province to start calculating monthly expenses. If you choose to deduct taxes, federal and provincial taxes for 2019 will be deducted from your income.</p>
+
+	<div class="input">
+		<form class="income">
+			<span class="ammount">
+		    	<label for="income">Enter your income in $:</label>
+		    	<input type="number" min="0" id="income" placeholder="Income" required>	
+		    </span>	    
+		    <table class="period">
+				<tr>
+					<th>Per Year</th>
+					<th>Per Month</th>
+					<th>Per Hour</th>
+				</tr>
+				<tr>
+					<td>
+						<input type="radio" name="period" value="year" checked="checked">
+					</td>
+					<td>
+						<input type="radio" name="period" value="month">
+					</td>
+					<td>
+						<input type="radio" name="period" value="hour"> 
+					</td>
+				</tr>
+			</table>
+			<span class = "hoursPerWeek">
+				<label for="hoursPerWeek">Hours you work per week:</label>
+				<input type="number" name="hoursPerWeek" id="perweek" placeholder="Hours per week" required>
+			</span>
+			<label for="province">Select your province:</label>
+			<select name="province" form="income" class = 'province'>
+				<option value="ab">Alberta</option>
+				<option value="bc">British Columbia</option>
+				<option value="mb">Manitoba</option>
+				<option value="nb">New Brunswick</option>
+				<option value="nl">Newfoundland and Labrador</option>
+				<option value="nt">Northwest Territories</option>
+				<option value="ns">Nova Scotia</option>
+				<option value="nu">Nunavut</option>
+				<option value="on" selected="selected">Ontario</option>
+				<option value="pe">Prince Edward Island</option>
+				<option value="qc">Quebec</option>
+				<option value="sk">Saskatchewan</option>
+				<option value="yt">Yukon</option>
+			</select>
+			<span class="incomeTax">
+				<input type="checkbox" id="deductTax"> Deduct tax from the income
+				<input type="submit" class="submitIncome" value="Submit">
+			</span>
+		</form>
+	</div>
+
+	<div class= "budgetCalc">
+	<p class="comment">Add your expenses here. Tax will be deducted based on province seleced in previous section.</p>
+		<span class = "calculator">
+			<div class = "expense">		
+				<h3 class="budget"></h3>
+				    <form class="expenses">
+					    <label for="expense">Enter first expense:</label>
+				      	<input type="text" id="name" placeholder="Expense" required>
+				      	<label for="price">$</label>
+				      	<input type="number" min="0" name="price" id="price" placeholder="Price" required>
+				      	<label for="quantity">Quantity</label>
+				      	<select name="quantity" form="expenses" class = 'quantity'>
+							<option selected="selected">1</option>
+				    	</select>
+				      	<input type="checkbox" id='taxfree'> Tax is included
+				      	<input class="submitExpense" type="submit" value="Add to the list">
+				    </form>
+
+			</div>
+		    <br></br>
+			<div class="output">
+				<table class="items">
+			  		<tr>
+			    		<th>Expense</th>
+			    		<th>Quantity</th> 
+			    		<th>Full Price</th>
+			  		</tr>
+			  	</table>
+			  	<p class="totalBudget">Total expenses for this month: $0</p>			
+				<p class="total" align="center">Budget left:</p>
+				<button type="button" id="reset">Reset</button>
+			</div>
+			<div id="dialog" title="Not enough budget!"></div>
+		</span>
+	</div>
+	<span class="info"><a href=".\about.html">About</a></span>
+	<span class="refresh"><a href="javascript:window.location.reload(true)">Start again</a></span>
+</body>
+</html>
