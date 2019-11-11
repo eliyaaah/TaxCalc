@@ -80,6 +80,7 @@ $(function() {
 		taxRate: [0.15, 0.205, 0.26, 0.29, 0.33]
 	};
 
+	getCookie();
 
 	$('#perweek').attr("disabled", true);
     for (i=2;i<=100;i++){
@@ -89,11 +90,13 @@ $(function() {
 		event.preventDefault();
 		const incomeInitial = $('form #income').val();
 		const province = $("select.province").val();
+		setCookie(["Income", "Province"], [incomeInitial, province]);
 		let provincialTaxRate = getProvincialTaxRate(province);
 		tax = provincialTaxRate.tax;
 		// provincialTaxRate = getProvincialTaxRate(province);
 		yearIncome = getYearIncome(incomeInitial);
 		if ($('#deductTax').is(':checked'))	{
+			setCookie("DeductTax", true);
 			provincialTax = calcTax(yearIncome, provincialTaxRate);
 			federalTax = calcTax(yearIncome, federalTaxRate);
 			budget = Math.round((yearIncome - federalTax - provincialTax)/12);
@@ -116,6 +119,7 @@ $(function() {
 		const price = parseFloat($('form.expenses #price').val());
 		const quantity = parseInt($('select.quantity option:selected').text());
 		const taxFree = $('form.expenses #taxfree').is(':checked');
+		setCookie(["Item", "Price", "Quantity", "TaxFree"], [item, price, quantity, taxFree]);
 		if (taxFree)	{
 			totalPrice = (quantity*price).toFixed(2);
 		}
@@ -143,6 +147,7 @@ $(function() {
 	$('#reset').on('click', function(event)	{
 		budget = initialBudget;
 		totalExpense = 0;
+		deleteCookie(["Item", "Price", "Quantity", "TaxFree"]);
 		$('p.total').text(`Budget left: $${budget}`);
 		$('.items').find("tr:gt(0)").remove();
 		$('.totalBudget').text(`Total expenses for this month: $${totalExpense}`);
@@ -150,7 +155,8 @@ $(function() {
 	});
 
 	$('input[type="radio"]').on('click',function()	{
-		let period = $('input[name="period"]:checked').val();
+		const period = $('input[name="period"]:checked').val();
+		setCookie("Period", period);
 		if (period === 'hour') {
 			$("#perweek").removeAttr("disabled");
 		}
@@ -162,6 +168,7 @@ $(function() {
 	function getYearIncome(incomeInitial)	{
 		let incomeYearly;
 		const selection = $('input[name="period"]:checked').val();
+		setCookie("Selection", selection);
 		if (selection ==='month')	{
 			incomeYearly = incomeInitial*12;
 		}
@@ -235,5 +242,36 @@ $(function() {
 			}
 		});
 		return tax;
+	}
+
+	function setCookie(cname, cvalue) {
+		let d = new Date();
+		d.setTime(d.getTime() + (24*60*60*1000));
+		const expires = "expires=" + d.toUTCString();
+		if (Array.isArray(cname)) {
+			for (i=0; i<cname.length; i++) {
+				document.cookie = cname[i] + "=" + cvalue[i] + expires + ";path=/";
+			}
+		}
+		else {
+			document.cookie = cname + "=" + cvalue + expires + ";path=/";
+		}	
+	}
+
+	function getCookie() {
+		const allcookies = document.cookie;
+		console.log("Cookies:" + allcookies);
+	}
+
+	function deleteCookie(cname) {
+		const expires = '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		if (Array.isArray(cname)) {
+			for (i=0; i<cname.length; i++) {
+				document.cookie = cname[i] + expires;
+			}
+		}
+		else {
+			document.cookie = cname + expires;
+		}	
 	}
 });
