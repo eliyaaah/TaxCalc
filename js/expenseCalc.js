@@ -8,6 +8,8 @@ $(function() {
 	let tax;
 	let federalTax;
 	let provincialTax;
+	const retrievedCookieName;
+	const retrievedCookieValue;
 	const allTaxRates = {
 		ab: {
 				taxBracket: [0, 131220, 157464, 209952, 314928, Infinity],
@@ -88,8 +90,24 @@ $(function() {
     }
 	$('form.income').on('submit', function(event)	{
 		event.preventDefault();
-		const incomeInitial = $('form #income').val();
-		const province = $("select.province").val();
+		const province;
+		const incomeInitial;
+		if (retrievedCookieName.length>0) {
+			for (let i=0; i<retrievedCookieName.length; i++) {
+				if(retrievedCookieName[i] == "Income") {
+					incomeInitial = retrievedCookieValue[i];
+					$('form #income').val(incomeInitial);
+				}
+				else if(retrievedCookieName[i] == "Province") {
+					province = retrievedCookieValue[i];
+					$("select.province").val(province);
+				}
+				else {
+					incomeInitial = $('form #income').val();
+					province = $("select.province").val();
+				}
+			}
+		}
 		setCookie(["Income", "Province"], [incomeInitial, province]);
 		let provincialTaxRate = getProvincialTaxRate(province);
 		tax = provincialTaxRate.tax;
@@ -260,7 +278,12 @@ $(function() {
 
 	function getCookie() {
 		const allcookies = document.cookie;
-		console.log("Cookies:" + allcookies);
+		cookiearray = allcookies.split(';');
+		for (let i=0; i<cookiearray.length; i++) {
+			retrievedCookieName[i] = cookiearray[i].split('=')[0];
+			retrievedCookieValue[i] = cookiearray[i].split('=')[1];
+			retrievedCookieValue[i] = retrievedCookieValue[i].split("expires")[0];
+		}
 	}
 
 	function deleteCookie(cname) {
