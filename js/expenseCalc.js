@@ -5,11 +5,11 @@ $(function() {
 	let budget;
 	let initialBudget;
 	let yearIncome;
-	let tax;
+	//let tax;
 	let federalTax;
 	let provincialTax;
-	const retrievedCookieName;
-	const retrievedCookieValue;
+	let retrievedCookieName = [];
+	let retrievedCookieValue = [];
 	const allTaxRates = {
 		ab: {
 				taxBracket: [0, 131220, 157464, 209952, 314928, Infinity],
@@ -53,7 +53,7 @@ $(function() {
 		},
 		on: {
 				taxBracket: [0, 43906, 62187, 70000, 220000, Infinity],
-				taxRate: [0.04, 0.07, 0.09, 0.115],
+				taxRate: [0.04, 0.07, 0.09, 0.115, 0.1316],
 				tax: 0.13
 		},
 		pe: {
@@ -81,43 +81,32 @@ $(function() {
 		taxBracket: [0, 47630, 95259, 147667, 210371, Infinity],
 		taxRate: [0.15, 0.205, 0.26, 0.29, 0.33]
 	};
-
+	console.log(document.cookie);
 	getCookie();
-
-	$('#perweek').attr("disabled", true);
+	if($('input[name="period"]:checked').val() != "hour") {
+		$('#perweek').attr("disabled", true);
+	}
     for (i=2;i<=100;i++){
         $select.append(`<option>${i}</option>`);
     }
 	$('form.income').on('submit', function(event)	{
 		event.preventDefault();
-		const province;
-		const incomeInitial;
-		if (retrievedCookieName.length>0) {
-			for (let i=0; i<retrievedCookieName.length; i++) {
-				if(retrievedCookieName[i] == "Income") {
-					incomeInitial = retrievedCookieValue[i];
-					$('form #income').val(incomeInitial);
-				}
-				else if(retrievedCookieName[i] == "Province") {
-					province = retrievedCookieValue[i];
-					$("select.province").val(province);
-				}
-				else {
-					incomeInitial = $('form #income').val();
-					province = $("select.province").val();
-				}
-			}
-		}
+		let province = $("select.province").val();
+		let incomeInitial =$('form #income').val();
+		let DeductTax = false;
 		setCookie(["Income", "Province"], [incomeInitial, province]);
 		let provincialTaxRate = getProvincialTaxRate(province);
-		tax = provincialTaxRate.tax;
+		//tax = provincialTaxRate.tax;
 		// provincialTaxRate = getProvincialTaxRate(province);
-		yearIncome = getYearIncome(incomeInitial);
-		if ($('#deductTax').is(':checked'))	{
+		yearIncome = parseFloat(getYearIncome(incomeInitial));
+		if (($('#deductTax').is(':checked')) || DeductTax)	{
 			setCookie("DeductTax", true);
 			provincialTax = calcTax(yearIncome, provincialTaxRate);
+			console.log(provincialTax);
 			federalTax = calcTax(yearIncome, federalTaxRate);
+			console.log(federalTax);
 			budget = Math.round((yearIncome - federalTax - provincialTax)/12);
+			console.log(budget);
 		}
 		else	{
 			budget = Math.round(yearIncome/12);
@@ -137,7 +126,7 @@ $(function() {
 		const price = parseFloat($('form.expenses #price').val());
 		const quantity = parseInt($('select.quantity option:selected').text());
 		const taxFree = $('form.expenses #taxfree').is(':checked');
-		setCookie(["Item", "Price", "Quantity", "TaxFree"], [item, price, quantity, taxFree]);
+		// setCookie(["Item", "Price", "Quantity", "TaxFree"], [item, price, quantity, taxFree]);
 		if (taxFree)	{
 			totalPrice = (quantity*price).toFixed(2);
 		}
@@ -174,7 +163,7 @@ $(function() {
 
 	$('input[type="radio"]').on('click',function()	{
 		const period = $('input[name="period"]:checked').val();
-		setCookie("Period", period);
+		//setCookie("Period", period);
 		if (period === 'hour') {
 			$("#perweek").removeAttr("disabled");
 		}
@@ -192,6 +181,7 @@ $(function() {
 		}
 		else if (selection ==='hour')	{
 			let hoursPerWeek = $('#perweek').val();
+			setCookie("Hours", hoursPerWeek);
 			incomeYearly = incomeInitial*52.143*hoursPerWeek;
 		}
 		else	{
@@ -246,7 +236,7 @@ $(function() {
 	}
 
 	function calcTax (yearIncome, taxObj)	{
-		let tax=0;
+		let tax;
 		let index;
 		taxObj.taxBracket.forEach((bracket) => {
 			index = taxObj.taxBracket.indexOf(bracket);
@@ -259,7 +249,7 @@ $(function() {
 				}
 			}
 		});
-		return tax;
+		return parseFloat(tax);
 	}
 
 	function setCookie(cname, cvalue) {
@@ -278,11 +268,46 @@ $(function() {
 
 	function getCookie() {
 		const allcookies = document.cookie;
-		cookiearray = allcookies.split(';');
-		for (let i=0; i<cookiearray.length; i++) {
-			retrievedCookieName[i] = cookiearray[i].split('=')[0];
-			retrievedCookieValue[i] = cookiearray[i].split('=')[1];
-			retrievedCookieValue[i] = retrievedCookieValue[i].split("expires")[0];
+		if(allcookies) {
+			const cookiearray = allcookies.split(';');
+			for (let i=0; i<cookiearray.length; i++) {
+				retrievedCookieName[i] = cookiearray[i].split('=')[0].trim();
+				retrievedCookieValue[i] = cookiearray[i].split('=')[1].trim();
+				retrievedCookieValue[i] = retrievedCookieValue[i].split("expires")[0].trim();
+			}
+			setInputs();
+		}
+	}
+
+	function setInputs() {
+		if (retrievedCookieName!=undefined) {
+			for (let i=0; i<retrievedCookieName.length; i++) {
+				if(retrievedCookieName[i] == "Income") {
+					// incomeInitial = retrievedCookieValue[i]
+					$('form #income').val(retrievedCookieValue[i]);
+				}
+				else if(retrievedCookieName[i] == "Province") {
+					// province = retrievedCookieValue[i];
+					$("select.province").val(retrievedCookieValue[i]);
+				}
+				else if(retrievedCookieName[i] == "Selection") {
+					//$('input[name="period"]:checked').val([retrievedCookieValue[i]]);
+					$("input[name=period][value=" + retrievedCookieValue[i] + "]").attr('checked', 'checked');
+				}
+				// else if(retrievedCookieName[i] == "Period") {
+				// 	if(retrievedCookieValue[i] == "hour") {
+				// 		$("#perweek").removeAttr("disabled");
+				// 	}
+				// }
+				else if(retrievedCookieName[i] == "Hours") {
+					$("#perweek").removeAttr("disabled");
+					$('#perweek').val(retrievedCookieValue[i]);
+				}
+				else if(retrievedCookieName[i] == "DeductTax") {
+					// DeductTax = true;
+					$('#deductTax').prop('checked', true);
+				}
+			}
 		}
 	}
 
@@ -297,4 +322,9 @@ $(function() {
 			document.cookie = cname + expires;
 		}	
 	}
+
+	$(".clean").click(function() {
+		deleteCookie(["Income", "Province", "Selection", "Hours", "DeductTax"]);
+		alert("Cookies were cleared");
+	  });
 });

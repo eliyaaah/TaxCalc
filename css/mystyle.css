@@ -160,6 +160,14 @@ input[type="submit"]:hover {
     left: 30px;
 }
 
+.clean {
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif; 
+    position: fixed;
+    bottom: 30px;
+    left: 150px;
+}
+
 .about  {
     font-size: 20px;
     font-family: 'Open Sans', sans-serif; 
