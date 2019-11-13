@@ -9,3 +9,5 @@ Tax is calculated based on both federal and provincial rates. Tax brackets infor
 Once income is entered and tax is calculated, user gets access to budget calculator. Budget calculator allows to calculate monthly budget based on the income. Purchase tax is calculated based on the province selected in the income section. 
 
 Supports session management through cookies. 
+
+**Available on**: https://eliyaaah.github.io/TaxCalc/
